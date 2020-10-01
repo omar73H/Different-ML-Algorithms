@@ -1,0 +1,271 @@
+// * Multiple regression is a linear regression but when multiple features
+// * Each feature is a function of either a single input or multiple inputs
+--------------------------
+Single input Regression
+
+(in one word
+The target = a 2D function of a single input
+)
+
+
+* Polynomial Regression: 
+```Single Regression but not a simple straight line, it can be quadratic, cubicm .... of p-th order
+```So generally we have the form
+``` ``` y = W0 + W1 (x^1) + W2 (x^2) + .... + Wp (x^p)
+``` we can view and treat each power of x(the only single input feature) as a different feature
+``` i.e feature1 = 1, feature2 = x, feature3 = x^2, ......
+``` and we call each of coefficients of Xs as parameters
+``` i.e. paramter1 = W0, paramter2 = W1, ........
+
+---------
+Detrending is removing a trend from a time series;
+a trend usually refers to a change in the mean over time.
+When you detrend data, you remove an aspect from the data that you think is causing some kind of distortion.
+---------
+Motivation Application:
+Detrending Time Series
+avergae price over monthes
+what is the observations from plot:
+1) on average house prices increase over time
+2) Seasonality:
+``` ``` in Summer: more peaple list their houses to sale + (Good houses are sold in summer) so the prices are high 
+``` ``` in Winter: less peaple list their houses to sale and the houses are left inventory(does not sold in pre summer) or because of special circumstances + (not so Good houses are sold in winter) so the prices are low 
+
+
+An example model
+--
+Modeling the seasonality using a linear term to model the increase over time ---- sinusoidal term to model the seasonality
+
+we have a parmeter phi that the phase angle added to the 2*Pi*t/12 term
+makes the exmaple looks like general case using the law of sin(a+b)
+
+----------
+seasonality on diff apps (any app that has the feature of periodicity)
+1) multiple seasonality in weather forecasting (daily seasonality and yearly seasonality)
+2) Flu monitoring (it has a periodic peaks __||__||___|||__|__||)
+3) Demand modeling (season of increase and decrease demanding for jackets (yearly seasonality))
+4) Motion modeling (You move in a periodic way)
+
+
+-------- 
+conclusion
+* Single Input Regression
+The target is modeled as a function (any function) of a single input
+
+Generally :
+y = W0 * f0(x) + W1 * f1(x) + W2 * f2(x) + W3 * f3(x) + .... + Wn * fn(x) + error
+
+yi = W0 * f0(xi) + W1 * f1(xi) + W2 * f2(xi) + W3 * f3(xi) + .... + Wn * fn(x) + ith-error
+
+
+fi(x) is the ith feature <----
+Wi is the i-th parameter/weight
+
+So in regerssion flow chart
+the Feature Extraction box:
+input is X (the input)
+output is F(x)'s (the features of X)
+
+
+
+
+---------------------------------------------------------
+Multiple input Regression
+
+Higher dimention functions
+(
+The target = a (n+1)-D function of (n) inputs
+)
+
+
+Notations for this module
+output: y (scalar)
+input: (BOLD)X (vector) of d-dimentions   X = [X[1],X[2],...,X[d]]
+
+X[j]: jth input in the input vector (scalar)
+Fj(X): jth feature of the input vector
+Xi: the input vector associated with the i-th record in the data set
+Xi[j]: jth input in the input vector associated with the i-th record (scalar)
+
+
+---- 
+Simple Multiple Regression hyperplane
+More generally
+D-dimentional Curve
+----
+more notations 
+N --> number of records in data set
+d --> number of inputs
+D --> number of features
+
+--------
+Interpreting the coefficients
+Single input simple linear relation
+W0 --> price of house with zero feet
+W1 --> predicted change in output for a unit change in input #
+
+Multi input sinple hyperplane relation
+fix all the other inputs and focus only on one input
+we returned for the same above @ # 
+
++ve Coeff --> if I increase this then the value goes up according to this model context
+-ve Coeff --> if I increase this then the value goes down according to this model context
+
+but does not mean +ve --> it is a generally good input / -ve --> it is a generally bad input
+as the same input can be +ve/-ve according to the context
+# of bedrooms can have
++ve coeff in models that does not have square Footage size as input (as increasing it is indication of increasing size)
+-ve coeff in models that has square Footage size as input(as increasing it while keeping the size fixed have a negative impact according to most of peaple)
+
+------
+Interpreting the Coefficients of a polynomial Regression (Single variable and the relation consists of different powers oof that input):
+try to interpret Wj: is the Coef of X^j: Try fix everything else and varying that term: You can'y because everything else contains the same variable in the term you are varying
+So conclusion: You cannot interpret the coefficients
+-----
+
+Fast notes about matrices
+special matrices are 0 matrix, identity matrix, column matrix, row matrix
+Arithmetic:
+*adding & sub are only for matrices of same size
+* scalar * matrix = new matrix (each entry is the corresponding entry in the old * scalar)
+* matrix1 * matrix2 --> only possible iff dimOf(matrix1) = n*p, dimOf(matrx2) =p*m -----< the res is of dim n*m
+* A*B != B*A (one of them may exist and the other not)
+
+Determinant: 
+|a    b|
+|      | = ad - cb
+|c    d| 
+and
+|+ - +|
+|     |
+|     |
+
+
+Inverse of a square matrix
+*A (n*n) has an inverse if we can find B(n*n) |:
+	A*B = B*A = In
+
+*B=A^-1
+
+*if A has inverse then it is non-singular
+else it is singular
+
+-------------------------
+Fitting D-dimensional curves
+rem: D-dimensioanl curve: y= W0 + W1 F1(X) + W2 F2(X) + ......  + Wn Fd(X)
+two methods(approaches)
+1)  closed form
+2)  hell-descendant
+steps for that 
+*Rewrite in matrix notation
+The form: yi = W0 F0(Xi) + W1 F1(Xi) + W2 F2(Xi) + ......  + Wn Fn(Xi) + ERRORi    ---> corresponding to the ith record in my dataset
+in matrix notation: yi = (Bold)W T * (Bold) F(Xi) + Ei  = (Bold) F(Xi) T * (Bold)W + Ei
+define vectors as columns only so to convert them into rows take the transpose
+****(Bold)W T = [W0,W1,W2,.....,Wd]
+****(Bold)F(Xi)T = [F0(Xi),F1(Xi),F2(Xi),.....,Fd(Xi)]
+For all observations
+
+Y              F				W      	    ERROR
+y1     [f0(x1),f1(x1),.....fd(x1)]		W0           E1
+y2     [f0(x2),f1(x2),.....fd(x2)]		W1	     E2
+y3     [f0(x3),f1(x3),.....fd(x3)]		.            E3            
+.		.				.             .
+.    =  	.			* 	Wd  	+     .
+.		.					      .
+.		.					      .	
+yn     [f0(x3),f1(x3),.....fd(x3)]			     En
+
+-----------------
+compute the cost of D-dimenional curve fit
+each fit has a cost and we pick the one wuth the min cost
+cost might be for example RSS
+----
+RSS in single input simple linear regression
+RSS(wo,w1) = SUM(i=1-->N) [ yi - (w0 + w1 * xi) ]^2 
+Note: (w0 + w1 * xi) = (predicted)yi
+RSS(w0,w1) = SUM(i=1-->N) [ yi - (predicted)yi]^2
+----
+RSS in multiple input general regression
+Wv == W vector
+Note:
+(predicted)yi = fv(Xvi) T * Wv
+RSS(W) = SUM(i=1-->N) [ yi - (pred)yi ]^2
+       = SUM(i=1-->N) [ yi - fv(Xvi) T * Wv ]^2
+       By looking at the above representaion of relation between ((predicted) Y  = Y - ERROR) / F / W 
+       = ( Y - predicted Y)T * ( Y - predicted Y)
+       = (Y - F * W)T * (Y - F * W)
+Proof:
+F * W = (Predicted) Y
+then (Y - F * W) = (Y - (Predicted)Y) =  y1 - (pred)y1
+					 y2 - (pred)y2
+					     .
+    					     .
+					     .
+					 yn - (pred)yn
+and ( Y - F * W) T = [y1 - (pred)y1 , y2 - (pred)y2 , .... , yn - (pred)yn]
+then the multiplication of the two vectors yields
+	(y1 - (pred)y1)^2 + (y2 - (pred)y)^2 + ...... + (yn - (pred)yn)^2
+
+--- now to get the best fit curve we have two approaches
+1) closed form solution
+2) gradient descent algorithm
+both needs us to compute the GRADIENT of RSS
+GRAD(RSS(W)) = GRAD( (Y - F * W)T * (Y - F * W) ) wrt W
+	     =  - 2 * FT * (Y - F * W)
+
+Remember what we need to do is which W that at which RSS is minimum
+1) CLOSED FORM SOL
+first: as we did in simple regression 
+we will set GRAD = 0 and solve for W 
+
+- 2 * FT * (Y - F * W) = 0     /-2
+FT * F * W = FT * Y            * (FT * F)^-1    and remb:  (A^-1 * A) = In  and    In * column vector = the column vector  , In * Matrix = the Matrix
+
+##################################   W = (FT * F)^-1 * FT * Y   #####################################
+  
+
+Remember Comparing the two approaches
+Closed form and Gradient descent
+*** in many ML problems cannot compute a closed form because it you cannot (or hard) solve for W  when setting the gradient to zero
+*** even if solving for W when Gradient = 0 is feasable, Gradient descent may be efficient (computationaly)
+*** Gradient descent relies only on choosing Stepsize and convergence criteria so it is generally applicable and easier than closed form
+	But it is alos a down side for Gradient descent as in the closed form we do not have to take any of these choices
+
+------
+Discusing the above closed form solution
+FT --> (D * N)    D = # of features , N = # of observations
+F  --> (N * D)   
+then their product is D * D matrix
+and it is inveritble if N > D  (or more specifically if # of linearly indpendent observation is > # of features)
+and the complexity for computing the inverse (O(D^3))
+if you have D features and N observations what is the total complexity of computing (HT H)^{-1}
+ O(N*D^2+D^3)
+--------------
+Approach 2 Gradient descent
+
+Alg:
+While (not Converged) ( magnitude of RSS > epsilon)
+	new W = old W - stepSize * GRAD of RSS computed (@ old W)
+	new W = old W + 2 * stepSize * FT * (Y - F * old W)
+
+
+note the 2D analogy ---> if x need to be increased then computed derivative is -ve
+			else it is positive 
+			and when you approach the optimal point the quantity of the computed derivated get smaller
+
+-------- 
+Updating that happens for each feature
+RSS = SUM(i=1-->N) [ (yi - h0(xi)*w0 - h1(xi)*w1 - h2(xi)*w2 ..... - hd(xi)*wd )^2 ]
+partial derivative for RSS wrt to Wj = -2 SUM (i=1-->N)[hj(xi) * (yi - h(xi)T * w)]
+				     = -2 SUM (i=1-->N)[hj(xi) * (yi - predicted yi)]
+				     = -2 hj * (Y - F*	)
+				---> hj is a vector in which it is  the j-th feature evaluated at each record in dataSet
+				---> hj = [hj(x1) , hj(x2) , hj(x3) ,  .... , hj(xN)]
+new wj = old wj - StepSize * partial derivatice @ old W
+new wj = old wj + 2 StepSize * SUM (i=1-->N)[hj(xi) * (yi - (pred)yi(@ old W))]
+
+Gradient descent algorithm is an extremely important alg in ML 
+
+##### IMPORTANT NOTE ######
+remember that a linear regression model is always linear in the parameters(Ws), but may use non-linear features(F(x)s).
+y=w0w1+log(w1)x

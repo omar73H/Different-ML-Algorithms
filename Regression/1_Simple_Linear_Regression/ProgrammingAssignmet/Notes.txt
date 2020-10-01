@@ -1,0 +1,12 @@
+How to iterate over an SArray
+Transformations --> .apply()
+Aggregation --> graphlab.aggregate
+
+example sum the sarray --> SArray.sum()	
+			   SArray.mean()
+
+also you can do opertaions directly on sarrays 
+example: multiplying two sarrays
+	SArray1 * SArray2  --> will result in 
+			     third SArray with th multiplication
+			    of corresponding cells

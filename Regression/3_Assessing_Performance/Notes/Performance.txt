@@ -1,0 +1,134 @@
+Performance is not complexity 
+performance is how accurate my model is 
+
+We can define loss function L(actual Y , Pred Y)
+examples for it
+Absolute error: |actual - Pred|    ( the effect of error is relatively small )
+Square error: (actual - Pred)^2   ( the effect of the error is higher)
+
+----- NOTE -----
+Creating regression model steps:
+1)I specify the function  --> which means I specify the features --> f0(x) , f1(x) , .... fd(x)
+2)I do gradient descent on Training data to get the weights (Model parameters)
+-----------------
+Training error  
+it is     (1/N) *Sum(i=1-->N)  L(yi , f(xi))        (average loss over all training records)  =  1/N * RSS
+
+RMS  ----->      SQRT(Traing error)
+
+----------
+Increasing the Model complexity ressults in Decreasing the Training ERROR
+
+BUT does the training error is a good measure of predictive performance ???
+
+Having small training erro DOES not implies having good predictive performance
+----------
+The Generalization error (TRUE) error is the one that is measure of how good the model predictive performance
+--
+Generalization error is the error over all possible (y , x) (($,sqft) in our example) pairs 
+Distrubtion of how likely Houses size is
+(Houses with very small and very large sizes are unlikely)
+Distribution of for a fixed House size how likely the prices is
+(Houses of specific size that were sold with very low price or very large price are unlikely )
+
+Generalization Error --> is the [Average of loss over all (y , x) pairs in my Dataset weighted by how likely each pair exist] []
+
+Generalization error and our model degree
+Decreasing MIN Increasing
+But the problem is generalization error is hard to compute
+
+
+Approximation of generalization error
+The true process of determining our model
+*is to determine the paramters using training data (The ones with the min RSS for training data)
+*then determine  the model performance using training data  (higher performance = lower test error)
+* the best model is one with the highest performance (lowest test error)
+test error  = Average of loss function over all records in test datasets
+how we get w^ ----> from traing data
+how to compute model performance   ---> from test data
+
+Test error and model degree
+is A noise of Generalization error
+
+
+Overfitting happens when
+You model is of parameters W*
+and there is another model of params W#
+such that:
+1)Train error of (W* model) < Training Error(W# model)
+2)True error of (W8 model) > True error (W# model)
+
+----------------------------------------
+Spiltting Data into train/test data
+if too few train data ---> poor determination of model parameters (W hat)
+if too few test data ---> test error is bas estimate of generalization error
+
+
+-----
+noise
+OTHER CONTRIBUTED factors
+such as personal relation, how a person feel about the house, .... etc which are not related to the size of the house or other house features in the dataset
+variance of noise term --> range of all possible values for a given input (sqft)
+irreducible error ---> related to data
+Bias
+For a specific model complexity 
+*Get the average fit over all datasets
+*then get the Bias
+-->Bias = true F(may be another complexity)   - average fit 
+if too large then we have a bad prediction by creating model with this complexity
+else we can create model with sufficient predictive performance with this complexity
+
+------
+Variance
+Range of all possible fits
+if too large then our model is very sensitive to the dataset
+else not so sensitive to the dataset
+------
+Bias is very high for low complexity models   and  very low for high complexity models
+Variance is very low for low complexity models and very high for high complexity models
+-------------
+Bias-Variance trade-off
+we want the complexity at the intersection of the (Bias-complexity) and (variance-complexity) curves
+= complexity at min Mean Square Error ------> but MSE is as true error (impossible to compute) because Bias and variance are impossible to compute
+and MSE = bias^2 + variance
+
+---------------------------
+Summary of tasks 
+Model selection: Determine the model complexity and the parameters (for that complexity)
+
+model assessment: how it is good in making predictions 
+----------------
+First try
+Model selection:
+
+
+BestMeasureSoFar: Worst that can happen initially
+CorrComplexity:-1
+CorrParams:-1
+
+For each possible model complexity  C:
+	get the paramters of best fit for that complexity Wc  Based on ----->Traininig Data<----
+	x = Test error of Wc Based  on ----->Test Data<-----
+	if x better than BestMeasureSoFar
+		CorrComplexity: C
+		CorrParams: Wc
+
+
+Model assessment:
+Measure Test error (approximated true error) for Wc (corrParams) 
+Problems with that model:
+You choose the complexity as the one whoose fit has minimum test error So The Model assessment will claim that the model is the best ever can be comparing to other models 
+(i.e it is the best model FOR the test data (from the test data point of view) )
+BUT Note that will cause if the test data is not representative of the world (and it is usally the case)
+
+How to solve it: Do not include the test data in any phase of model selection (To make it a true test data)
+
+
+  
+practical implimination:
+three sets --> Train data , validation data, test data
+How to split 
+no correct answer 
+but ex : 80 10 10 
+	 50 25 25
+
